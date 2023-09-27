@@ -1,0 +1,722 @@
+#! D:/TCDEIE/Nukex/1/nuke-14.0.3.dll -nx
+#write_info Write1 file:"D:/TCDEIE/Motion/as1.2/a1/output/3Dmc60.%02d.png" format:"2048 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"46 50" fps:"0" colorspace:"default" datatype:"8 bit" transfer:"unknown" views:"main" colorManagement:"Nuke"
+version 14.0 v3
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="0" w="1917" h="991" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1254" stretch="1"/>
+            <splitter orientation="2">
+                <split size="557"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="392"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+                <page id="Scenegraph.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name D:/TCDEIE/Motion/as1.2/a1/.nk
+ frame 47
+ first_frame 46
+ last_frame 50
+ lock_range true
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement Nuke
+ workingSpaceLUT linear
+ monitorLut sRGB
+ monitorOutLUT rec709
+ int8Lut sRGB
+ int16Lut sRGB
+ logLut Cineon
+ floatLut linear
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x7171c600
+ label "2D MRF Output \n(5 Iters)"
+ note_font_size 30
+ xpos -184
+ ypos 294
+ bdwidth 231
+ bdheight 99
+ z_order -1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x8e558eff
+ label "3D MRF Output\n(no mc 5 Iters)"
+ note_font_size 30
+ xpos -608
+ ypos 288
+ bdwidth 225
+ bdheight 103
+ z_order -1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode3
+ tile_color 0x138845ff
+ label ML
+ note_font_size 30
+ xpos 98
+ ypos -262
+ bdwidth 135
+ bdheight 198
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode4
+ tile_color 0x235b88ff
+ label "2D MRF"
+ note_font_size 30
+ xpos -212
+ ypos -216
+ bdwidth 267
+ bdheight 439
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode5
+ tile_color 0x886181ff
+ label "3D MRF"
+ note_font_size 30
+ xpos -662
+ ypos -214
+ bdwidth 326
+ bdheight 380
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode6
+ tile_color 0x148843ff
+ label "ML Output"
+ note_font_size 30
+ xpos 96
+ ypos 298
+ bdwidth 160
+ bdheight 90
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode7
+ tile_color 0x418388ff
+ label "3D MRF Output\n(with mc 5 Iters)"
+ note_font_size 30
+ xpos -1033
+ ypos 261
+ bdwidth 259
+ bdheight 113
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode8
+ tile_color 0x868836ff
+ label "Motion Compensated Bin"
+ note_font_size 30
+ xpos -1511
+ ypos -172
+ bdwidth 372
+ bdheight 231
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode9
+ tile_color 0x457e88ff
+ label "3D MRF With MC"
+ note_font_size 30
+ xpos -1073
+ ypos -211
+ bdwidth 329
+ bdheight 396
+}
+Merge2 {
+ inputs 0
+ operation multiply
+ name Merge1
+ xpos -334
+ ypos 544
+}
+Read {
+ inputs 0
+ file_type tiff
+ file D:/TCDEIE/Motion/as1.2/a1/Hula.#####.tiff
+ format "2048 1080 0 0 2048 1080 1 2K_DCP"
+ first 46
+ last 50
+ origfirst 46
+ origlast 50
+ origset true
+ name Read4
+ xpos 628
+ ypos -255
+}
+Read {
+ inputs 0
+ file_type tiff
+ file D:/TCDEIE/Motion/as1.2/a1/Hula.#####.tiff
+ format "2048 1080 0 0 2048 1080 1 2K_DCP"
+ first 46
+ last 50
+ origfirst 46
+ origlast 50
+ origset true
+ colorspace linear
+ name Read2
+ xpos 115
+ ypos -376
+}
+Expression {
+ expr0 "(r - 0.3217) * (r - 0.3217) / 0.00193"
+ expr1 "(g - 0.6276) * (g - 0.6276) / 0.00021"
+ expr2 "(b - 0.5150) * (b - 0.5150) / 0.000251"
+ name BlackGroundEnergy
+ xpos 115
+ ypos -207
+}
+set N8b35d000 [stack 0]
+Expression {
+ expr0 "step(60, r + g + b)"
+ expr1 "step(60, r + g + b)"
+ expr2 "step(60, r + g + b)"
+ name MLEstimate
+ xpos 115
+ ypos -109
+}
+set N8b35d400 [stack 0]
+Dot {
+ name Dot7
+ xpos 61
+ ypos -106
+}
+set N8b35d800 [stack 0]
+push $N8b35d000
+Expression {
+ expr0 "r + g + b"
+ expr1 "r + g + b"
+ expr2 "r + g + b"
+ name Likelihood_energy
+ xpos 115
+ ypos -157
+}
+Dot {
+ name Dot1
+ xpos -45
+ ypos -154
+}
+set N8b3a6000 [stack 0]
+BlinkScript {
+ inputs 2
+ recompileCount 14
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise 8be45c18dbd11c8947906b5f87985399b303dc84ec2efd54d7e4dbf76b3b3677 3 \"src_benergy\" Read Point \"alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n//calculate Es0 energy when alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom;\n\n//calculate Es1 energy when alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, if E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP6
+ xpos -79
+ ypos -115
+}
+set N8b3a6400 [stack 0]
+push $N8b3a6000
+Dot {
+ name Dot2
+ xpos -155
+ ypos -154
+}
+set N8b3a6800 [stack 0]
+Dot {
+ name Dot3
+ xpos -155
+ ypos -37
+}
+set N8b3a6c00 [stack 0]
+BlinkScript {
+ inputs 2
+ recompileCount 8
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise 91900e434d516a6d5a5d78171938690f83456d97137f5a5cdff2b6b038a1aac5 3 \"src_benergy\" Read Point \"alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP7
+ xpos -79
+ ypos -46
+}
+set N8b3a7000 [stack 0]
+push $N8b3a6c00
+Dot {
+ name Dot4
+ xpos -155
+ ypos 34
+}
+set N8b3a7400 [stack 0]
+BlinkScript {
+ inputs 2
+ recompileCount 8
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise 91900e434d516a6d5a5d78171938690f83456d97137f5a5cdff2b6b038a1aac5 3 \"src_benergy\" Read Point \"alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP8
+ xpos -79
+ ypos 25
+}
+push $N8b3a7400
+Dot {
+ name Dot5
+ xpos -155
+ ypos 114
+}
+set N8b3a7c00 [stack 0]
+BlinkScript {
+ inputs 2
+ recompileCount 9
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise 91900e434d516a6d5a5d78171938690f83456d97137f5a5cdff2b6b038a1aac5 3 \"src_benergy\" Read Point \"alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP9
+ xpos -79
+ ypos 105
+}
+push $N8b3a7c00
+Dot {
+ name Dot6
+ xpos -155
+ ypos 187
+}
+BlinkScript {
+ inputs 2
+ recompileCount 8
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise 91900e434d516a6d5a5d78171938690f83456d97137f5a5cdff2b6b038a1aac5 3 \"src_benergy\" Read Point \"alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP10
+ xpos -79
+ ypos 178
+}
+Dot {
+ name Dot21
+ xpos -45
+ ypos 368
+}
+push $N8b35d800
+Dot {
+ name Dot8
+ xpos 61
+ ypos -248
+}
+set Nfa915000 [stack 0]
+Dot {
+ name Dot37
+ xpos 61
+ ypos -360
+}
+Dot {
+ name Dot39
+ xpos -1286
+ ypos -360
+}
+set Nfa915800 [stack 0]
+Dot {
+ name Dot38
+ xpos -1396
+ ypos -360
+}
+TimeOffset {
+ time_offset 1
+ time ""
+ name TimeOffset2
+ xpos -1430
+ ypos -103
+}
+push $Nfa915800
+VectorGenerator {
+ motionEstimation Regularized
+ name VectorGenerator1
+ xpos -1320
+ ypos -51
+}
+ShuffleCopy {
+ inputs 2
+ in2 motion
+ red red
+ green green
+ blue blue
+ black blue2
+ white alpha2
+ out2 backward
+ name Shuffle1
+ xpos -1430
+ ypos -45
+}
+IDistort {
+ uv backward
+ filter Simon
+ name IDistort1
+ xpos -1430
+}
+Dot {
+ name Dot40
+ xpos -1196
+ ypos 9
+}
+Dot {
+ name Dot26
+ xpos -1044
+ ypos 9
+}
+set Nfa93f000 [stack 0]
+Dot {
+ name Dot27
+ xpos -1044
+ ypos 79
+}
+set Nfa93f400 [stack 0]
+Dot {
+ name Dot28
+ xpos -1044
+ ypos 151
+}
+push $Nfa93f400
+push $Nfa93f000
+push $Nfa93f000
+Dot {
+ name Dot25
+ xpos -1044
+ ypos -66
+}
+set Nfa93fc00 [stack 0]
+push $Nfa93fc00
+Dot {
+ name Dot24
+ xpos -1044
+ ypos -139
+}
+push $Nfa915000
+Dot {
+ name Dot9
+ xpos -514
+ ypos -247
+}
+set Nfa966400 [stack 0]
+Dot {
+ name Dot36
+ xpos -514
+ ypos -339
+}
+Dot {
+ name Dot23
+ xpos -925
+ ypos -339
+}
+push $N8b3a6800
+Dot {
+ name Dot35
+ xpos -155
+ ypos -296
+}
+Dot {
+ name Dot34
+ xpos -782
+ ypos -296
+}
+Dot {
+ name Dot29
+ xpos -782
+ ypos -139
+}
+set Nfa967800 [stack 0]
+BlinkScript {
+ inputs 3
+ recompileCount 14
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP15
+ selected true
+ xpos -959
+ ypos -148
+}
+push $Nfa967800
+Dot {
+ name Dot30
+ xpos -782
+ ypos -67
+}
+set Nfa982000 [stack 0]
+BlinkScript {
+ inputs 3
+ recompileCount 13
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP16
+ xpos -959
+ ypos -75
+}
+push $Nfa982000
+Dot {
+ name Dot31
+ xpos -782
+ ypos 10
+}
+set Nfa982800 [stack 0]
+BlinkScript {
+ inputs 3
+ recompileCount 13
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP17
+ xpos -959
+}
+push $Nfa982800
+Dot {
+ name Dot32
+ xpos -782
+ ypos 79
+}
+set Nfa983000 [stack 0]
+BlinkScript {
+ inputs 3
+ recompileCount 13
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP18
+ xpos -959
+ ypos 69
+}
+push $Nfa983000
+Dot {
+ name Dot33
+ xpos -782
+ ypos 150
+}
+BlinkScript {
+ inputs 3
+ recompileCount 14
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP19
+ xpos -959
+ ypos 139
+}
+Dot {
+ name Dot41
+ xpos -925
+ ypos 352
+}
+set Nfa9b2000 [stack 0]
+Write {
+ file D:/TCDEIE/Motion/as1.2/a1/output/3Dmc60.##.png
+ file_type png
+ checkHashOnRead false
+ version 18
+ name Write1
+ xpos -712
+ ypos 639
+}
+push $N8b3a6400
+push $Nfa966400
+TimeOffset {
+ time_offset 1
+ time ""
+ name TimeOffset1
+ xpos -667
+ ypos -251
+}
+Dot {
+ name Dot14
+ xpos -633
+ ypos -154
+}
+set Nfa9b2400 [stack 0]
+Dot {
+ name Dot10
+ xpos -633
+ ypos -81
+}
+set Nfa9b2800 [stack 0]
+Dot {
+ name Dot11
+ xpos -633
+ ypos -6
+}
+set Nfa9b2c00 [stack 0]
+Dot {
+ name Dot12
+ xpos -633
+ ypos 64
+}
+set Nfa9b3000 [stack 0]
+Dot {
+ name Dot13
+ xpos -633
+ ypos 136
+}
+push $Nfa9b3000
+push $Nfa9b2c00
+push $Nfa9b2800
+push $Nfa9b2400
+push $Nfa966400
+push $N8b3a6800
+Dot {
+ name Dot15
+ xpos -371
+ ypos -154
+}
+set Nfa9b3800 [stack 0]
+BlinkScript {
+ inputs 3
+ recompileCount 16
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP11
+ xpos -548
+ ypos -163
+}
+Dot {
+ name Dot42
+ xpos -514
+ ypos -127
+}
+push $Nfa9b3800
+Dot {
+ name Dot16
+ xpos -371
+ ypos -82
+}
+set Nfa9da000 [stack 0]
+BlinkScript {
+ inputs 3
+ recompileCount 11
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP5
+ xpos -548
+ ypos -90
+}
+push $Nfa9da000
+Dot {
+ name Dot17
+ xpos -371
+ ypos -5
+}
+set Nfa9da800 [stack 0]
+BlinkScript {
+ inputs 3
+ recompileCount 11
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP12
+ xpos -548
+ ypos -14
+}
+push $Nfa9da800
+Dot {
+ name Dot18
+ xpos -371
+ ypos 64
+}
+set Nfa9db000 [stack 0]
+BlinkScript {
+ inputs 3
+ recompileCount 10
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP13
+ xpos -548
+ ypos 54
+}
+push $Nfa9db000
+Dot {
+ name Dot19
+ xpos -371
+ ypos 135
+}
+BlinkScript {
+ inputs 3
+ recompileCount 10
+ ProgramGroup 1
+ KernelDescription "2 \"MAP\" iterate componentWise daff1ec1a8c70bf0860978a2e56f8e60bf92dd416ba1e11d043d4e8c50d7218c 4 \"src_benergy\" Read Point \"alpha\" Read Random \"pre_alpha\" Read Random \"dst_alpha\" Write Point 0 0 0"
+ kernelSource "kernel MAP: ImageComputationKernel<eComponentWise>\n\{\nImage<eRead, eAccessPoint, eEdgeClamped> src_benergy; \nImage<eRead, eAccessRandom, eEdgeClamped> alpha; \nImage<eRead, eAccessRandom, eEdgeClamped> pre_alpha;\nImage<eWrite> dst_alpha;\nvoid process(int2 pos) \{\n     \nfloat lambda = 20.0f;\n\n// calculate background energy\nfloat E_l0 = src_benergy(); \n\n// set E_t= 5\nfloat E_t = 5;\n\n// Detect the 8 neighbor pixels\nfloat left = alpha(pos.x - 1, pos.y);\n\nfloat top = alpha(pos.x, pos.y + 1);  \n\nfloat bottom = alpha(pos.x, pos.y - 1);  \n\nfloat right = alpha(pos.x + 1, pos.y);  \n\nfloat lefttop = alpha(pos.x - 1, pos.y + 1);\n\nfloat righttop = alpha(pos.x + 1, pos.y + 1);  \n\nfloat leftbottom = alpha(pos.x - 1, pos.y - 1);  \n\nfloat rightbottom = alpha(pos.x + 1, pos.y - 1);  \n\n// Detect the 8 neighbor pixels in the previous fram   \nfloat pleft = pre_alpha(pos.x - 1, pos.y);\n\nfloat ptop = pre_alpha(pos.x, pos.y + 1);  \n\nfloat pbottom = pre_alpha(pos.x, pos.y - 1);  \n\nfloat pright = pre_alpha(pos.x + 1, pos.y);  \n\nfloat plefttop = pre_alpha(pos.x - 1, pos.y + 1);\n\nfloat prighttop = pre_alpha(pos.x + 1, pos.y + 1);  \n\nfloat pleftbottom = pre_alpha(pos.x - 1, pos.y - 1);  \n\nfloat prightbottom = pre_alpha(pos.x + 1, pos.y - 1);  \n\nfloat pcenter = pre_alpha(pos.x, pos.y);\n\n//calculate Es0 spatial energy alpha = 0\nfloat E_s0 = left + top + right + bottom + lefttop + righttop + leftbottom + rightbottom + pleft + ptop + pbottom + pright + plefttop + prighttop + pleftbottom + prightbottom + pcenter;\n\n//calculate Es1 spatial energy alpha= 1 \nfloat E_s1 = fabs(left - 1.0f) + fabs(top - 1.0f) + fabs(right - 1.0f) + fabs(bottom - 1.0f) + fabs(lefttop - 1.0f) + fabs(righttop - 1.0f) + fabs(leftbottom - 1.0f) + fabs(rightbottom - 1.0f) + fabs(plefttop - 1.0f) + fabs(pleftbottom - 1.0f) + fabs(prighttop - 1.0f) + fabs(prightbottom - 1.0f) + fabs(pcenter - 1.0f); \n\nfloat E0 = E_l0 + lambda * E_s0; \n\nfloat E1 = E_t + lambda * E_s1;  \n\n// if E0<E1 output 0, E0>E1 output 1\nif (E0 < E1)            \ndst_alpha() = 0.0f;\nelse      \ndst_alpha() = 1.0f;  \n       \n\}   \n\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name MAP14
+ xpos -548
+ ypos 124
+}
+Dot {
+ name Dot20
+ xpos -512
+ ypos 372
+}
+push $Nfa9b2000
+push $N8b3a7000
+push $N8b35d400
+Dot {
+ name Dot22
+ xpos 149
+ ypos 346
+}
+Viewer {
+ inputs 5
+ frame_range 46-50
+ input_number 3
+ monitorOutOutputTransform rec709
+ name Viewer1
+ xpos -586
+ ypos 477
+}
